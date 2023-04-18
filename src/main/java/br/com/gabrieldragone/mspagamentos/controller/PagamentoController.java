@@ -2,6 +2,7 @@ package br.com.gabrieldragone.mspagamentos.controller;
 
 import br.com.gabrieldragone.mspagamentos.dto.PagamentoDto;
 import br.com.gabrieldragone.mspagamentos.service.PagamentoService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,13 @@ public class PagamentoController {
     private PagamentoService pagamentoService;
 
     @GetMapping
+    @Operation(description = "Retorna todos os pagamentos de forma paginada")
     public ResponseEntity<Page<PagamentoDto>> listar(@PageableDefault(size = 10) Pageable paginacao) {
         return ResponseEntity.ok(pagamentoService.obterTodos(paginacao));
     }
 
     @GetMapping("/{id}") // Indica ao Spring que deve atribuir à variável abaixo o valor que estamos enviando como parâmetro no endereço da Requisição
+    @Operation(description = "Retorna um pagamento buscando por id")
     public ResponseEntity<PagamentoDto> buscar(@PathVariable @NotNull Long id) {
         return ResponseEntity.ok(pagamentoService.obterPorId(id));
     }
