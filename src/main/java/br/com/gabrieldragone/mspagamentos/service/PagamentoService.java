@@ -41,6 +41,7 @@ public class PagamentoService {
 
     public PagamentoDto atualizar(Long id, PagamentoDto dto) {
         Pagamento pagamento = repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        pagamento = modelMapper.map(dto, Pagamento.class);
         pagamento.setId(id);
         pagamento = repository.save(pagamento);
         return modelMapper.map(pagamento, PagamentoDto.class);
