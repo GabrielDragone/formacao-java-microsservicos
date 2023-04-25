@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -55,6 +56,11 @@ public class PagamentoController {
         pagamentoService.excluir(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/porta")
+    public String retornarPorta(@Value("{local.server.port}") String porta) {
+        return String.format("Aplicação rodando na porta %s", porta);
     }
 
 
