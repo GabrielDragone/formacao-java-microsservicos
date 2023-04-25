@@ -58,10 +58,14 @@ public class PagamentoController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/confirmar") // Patch pois vai atualizar parcialmente o objeto.
+    public void confirmarPagamento(@PathVariable @NotNull Long id) {
+        pagamentoService.confirmarPagamento(id);
+    }
+
     @GetMapping("/porta")
     public String retornarPorta(@Value("{local.server.port}") String porta) {
         return String.format("Aplicação rodando na porta %s", porta);
     }
-
 
 }
