@@ -1,5 +1,6 @@
 package br.com.gabrieldragone.mspagamentos.model;
 
+import br.com.gabrieldragone.mspagamentos.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,7 +1,9 @@
 package br.com.gabrieldragone.mspagamentos.controller;
 
 import br.com.gabrieldragone.mspagamentos.dto.PagamentoDto;
+import br.com.gabrieldragone.mspagamentos.enums.Status;
 import br.com.gabrieldragone.mspagamentos.service.PagamentoService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -59,8 +61,14 @@ public class PagamentoController {
     }
 
     @PatchMapping("/{id}/confirmar") // Patch pois vai atualizar parcialmente o objeto.
+    @CircuitBreaker(name = "atualizaPedido", fallbackMethod = "pagamentoAutorizadoComIntegracaoPendente") // Habilita a tratativa do Circuit Breaker. fallBackMethod indica qual o método que fará a tratativa em caso de entrar no Circuit Breaker
     public void confirmarPagamento(@PathVariable @NotNull Long id) {
         pagamentoService.confirmarPagamento(id);
+    }
+
+    // Fallback do atualizaPedido. Deve ter a mesma assinatura (retorno, parametro e UM paramtro adicional de Exception). Obs: Se não passar a exception não vai funcionar.
+    public void pagamentoAutorizadoComIntegracaoPendente(@PathVariable @NotNull Long id, Exception e) {
+        pagamentoService.alterarStatus(id, Status.CONFIRMADO_SEM_INTEGRACAO);
     }
 
     @GetMapping("/porta")

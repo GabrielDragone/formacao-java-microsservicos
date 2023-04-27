@@ -1,8 +1,10 @@
 package br.com.gabrieldragone.mspagamentos.dto;
 
-import br.com.gabrieldragone.mspagamentos.model.Status;
+import br.com.gabrieldragone.mspagamentos.enums.Status;
+import br.com.gabrieldragone.mspagamentos.model.ItemDoPedido;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class PagamentoDto {
 
@@ -15,12 +17,13 @@ public class PagamentoDto {
     private Status status;
     private Long pedidoId;
     private Long formaDePagamentoId;
+    private List<ItemDoPedido> itens;
 
     public PagamentoDto() {
     }
 
     public PagamentoDto(Long id, BigDecimal valor, String nome, String numero, String expiracao, String codigo,
-                        Status status, Long pedidoId, Long formaDePagamentoId) {
+                        Status status, Long pedidoId, Long formaDePagamentoId, List<ItemDoPedido> itens) {
         this.id = id;
         this.valor = valor;
         this.nome = nome;
@@ -30,6 +33,7 @@ public class PagamentoDto {
         this.status = status;
         this.pedidoId = pedidoId;
         this.formaDePagamentoId = formaDePagamentoId;
+        this.itens = itens;
     }
 
     public Long getId() {
@@ -102,5 +106,13 @@ public class PagamentoDto {
 
     public void setFormaDePagamentoId(Long formaDePagamentoId) {
         this.formaDePagamentoId = formaDePagamentoId;
+    }
+
+    public List<ItemDoPedido> getItens() {
+        return itens;
+    }
+
+    public void setItens(List<ItemDoPedido> itens) {
+        this.itens = itens;
     }
 }

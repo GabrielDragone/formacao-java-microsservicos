@@ -2,8 +2,9 @@ package br.com.gabrieldragone.mspagamentos.service;
 
 import br.com.gabrieldragone.mspagamentos.client.PedidoClient;
 import br.com.gabrieldragone.mspagamentos.dto.PagamentoDto;
+import br.com.gabrieldragone.mspagamentos.model.ItemDoPedido;
 import br.com.gabrieldragone.mspagamentos.model.Pagamento;
-import br.com.gabrieldragone.mspagamentos.model.Status;
+import br.com.gabrieldragone.mspagamentos.enums.Status;
 import br.com.gabrieldragone.mspagamentos.repository.PagamentoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,7 +36,10 @@ public class PagamentoService {
 
     public PagamentoDto obterPorId(Long id) {
         Pagamento pagamento = repository.findById(id).orElseThrow(EntityNotFoundException::new);
-        return modelMapper.map(pagamento, PagamentoDto.class);
+        PagamentoDto dto =  modelMapper.map(pagamento, PagamentoDto.class);
+        List<ItemDoPedido> itens = pedidoClient.obterItensDoPedido(id).getItens();
+        dto.setItens(itens);
+        return dto;
     }
 
     public PagamentoDto criar(PagamentoDto dto) {
@@ -67,6 +72,17 @@ public class PagamentoService {
         pagamento.get().setStatus(Status.CONFIRMADO);
         repository.save(pagamento.get());
         pedidoClient.atualizarPagamento(pagamento.get().getPedidoId());
+    }
+
+    public void alterarStatus(Long id, Status status) {
+        Optional<Pagamento> pagamento = repository.findById(id);
+
+        if (!pagamento.isPresent()) {
+            throw new EntityNotFoundException();
+        }
+
+        pagamento.get().setStatus(status);
+        repository.save(pagamento.get());
     }
 
 }
